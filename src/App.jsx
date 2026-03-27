@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings2, Play, Dices, Info, HelpCircle, Spade, Heart, Club, Diamond } from 'lucide-react';
+import { Settings2, Play, Dices, Info, HelpCircle, Spade, Heart, Club, Diamond, ChevronDown } from 'lucide-react';
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import DataTable from './components/DataTable';
@@ -16,6 +16,7 @@ import { chiSquareTest, kolmogorovSmirnovTest, pokerTest } from './utils/tests';
 function App() {
   const [appState, setAppState] = useState('welcome'); // welcome, transition, generator
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [method, setMethod] = useState('LCG');
   const [params, setParams] = useState({ x0: 554, a: 5, c: 7, m: 16, d: 4, n: 100 });
   const [results, setResults] = useState(null);
@@ -66,6 +67,10 @@ function App() {
         {
           element: '.tour-config',
           popover: { title: 'Configuración', description: 'Aquí puedes configurar el generador.', side: 'right', align: 'start' }
+        },
+        {
+          element: '.tour-guide',
+          popover: { title: 'Guía de Parámetros', description: 'Haciendo clic aquí puedes ver recomendaciones matemáticas (semillas, multiplicadores) probadas para tener mejores resultados en tus distribuciones.', side: 'right', align: 'start' }
         },
         {
           element: '.tour-method',
@@ -143,6 +148,53 @@ function App() {
 
       <main className="container mx-auto p-6 grid grid-cols-1 xl:grid-cols-12 gap-8 mt-6 relative">
         <div className="tour-config xl:col-span-3 space-y-6">
+          
+          <div className="tour-guide bg-slate-800 border border-indigo-500/30 rounded-2xl shadow-lg relative overflow-hidden transition-all">
+            <button 
+              onClick={() => setShowGuide(!showGuide)}
+              className="w-full p-4 flex items-center justify-between text-sm font-bold text-indigo-300 hover:bg-slate-750 transition-colors focus:outline-none"
+            >
+              <div className="flex items-center gap-2">
+                <Info className="w-5 h-5 text-indigo-400" /> 
+                Guía de Parámetros
+              </div>
+              <ChevronDown className={`w-5 h-5 text-indigo-400 transition-transform duration-300 ${showGuide ? 'rotate-180' : ''}`} />
+            </button>
+            
+            <AnimatePresence>
+              {showGuide && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="p-5 pt-0 text-xs text-indigo-100/70 space-y-3 leading-relaxed border-t border-slate-700/50 mt-1">
+                    <p>
+                      <strong className="text-indigo-200">Congruencial Lineal:</strong><br/>
+                      • <span className="text-indigo-100 font-medium">m (módulo):</span> Valor grande (ej. 2^32 o 100).<br/>
+                      • <span className="text-indigo-100 font-medium">c (incremento):</span> Impar si <i>m</i> es potencia de 2.<br/>
+                      • <span className="text-indigo-100 font-medium">a (multiplicador):</span> <i>a-1</i> múltiplo de los factores primos de <i>m</i>.<br/>
+                      <span className="text-emerald-400 font-medium mt-1 inline-block">💡 Semilla y Parámetros Ideales:</span> X₀=15, a=17, c=43, m=100
+                    </p>
+                    <p>
+                      <strong className="text-indigo-200">Congruencial Multiplicativo:</strong><br/>
+                      • <span className="text-indigo-100 font-medium">X₀ (semilla):</span> Impar y no divisible por 2 o 5 si <i>m=10^k</i>.<br/>
+                      • <span className="text-indigo-100 font-medium">a:</span> <i>8t ± 3</i> (para m=2^k) o <i>200t ± p</i> (para m=10^k).<br/>
+                      <span className="text-emerald-400 font-medium mt-1 inline-block">💡 Semilla y Parámetros Ideales:</span> X₀=17, a=211, m=1000
+                    </p>
+                    <p>
+                      <strong className="text-indigo-200">Cuadrados Medios:</strong><br/>
+                      • <span className="text-indigo-100 font-medium">X₀ (semilla):</span> Exactamente <i>D</i> dígitos.<br/>
+                      • ⚠️ Evita semillas con ceros al final para no colapsar rápidamente a 0.<br/>
+                      <span className="text-emerald-400 font-medium mt-1 inline-block">💡 Semillas Ideales (D=4):</span> 5772, 7182 o 9143
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6 shadow-xl">
             <h2 className="text-lg font-semibold flex items-center gap-2 mb-6 text-indigo-300">
               <Settings2 className="w-5 h-5" /> Configuración
