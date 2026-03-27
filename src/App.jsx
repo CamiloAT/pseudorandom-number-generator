@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings2, Play, Dices, Info, HelpCircle, Spade, Heart, Club, Diamond, ChevronDown } from 'lucide-react';
+import { Settings2, Play, Dices, Info, HelpCircle, Spade, Heart, Club, Diamond, ChevronDown, BarChart3 } from 'lucide-react';
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import DataTable from './components/DataTable';
@@ -10,12 +10,14 @@ import TestResults from './components/TestResults';
 import WelcomeScreen from './components/WelcomeScreen';
 import TransitionScreen from './components/TransitionScreen';
 import InfoModal from './components/InfoModal';
+import CompareModal from './components/CompareModal';
 import { generateLinearCongruential, generateMultiplicativeCongruential, generateMiddleSquare, calculateStats } from './utils/generators';
 import { chiSquareTest, kolmogorovSmirnovTest, pokerTest } from './utils/tests';
 
 function App() {
   const [appState, setAppState] = useState('welcome'); // welcome, transition, generator
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showCompareModal, setShowCompareModal] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [method, setMethod] = useState('LCG');
   const [params, setParams] = useState({ x0: 554, a: 5, c: 7, m: 16, d: 4, n: 100 });
@@ -85,8 +87,12 @@ function App() {
           popover: { title: 'Generar', description: '¡Haz clic aquí para generar los números! La aplicación aplicará el método y realizará todas las pruebas estadísticas.', side: 'right', align: 'start' }
         },
         {
+          element: '.tour-compare',
+          popover: { title: 'Comparar Modelos', description: 'Aquí podrás probar y medir los tres algoritmos al tiempo. Verás sus gráficas conjuntas y si logran pasar o fallar las pruebas estadísticas (Chi-Cuadrado, K-S, Póker) y su promedio bajo tu configuración base.', side: 'bottom', align: 'center' }
+        },
+        {
           element: '.tour-results',
-          popover: { title: 'Resultados', description: 'Una vez generados, aquí aparecerán todos los resultados: medias, varianzas, gráficas de dispersión y las pruebas Chi-Cuadrado, K-S y Poker.', side: 'left', align: 'start' }
+          popover: { title: 'Resultados', description: 'Una vez generados, aquí aparecerán todos los resultados del algoritmo escogido: medias, varianzas, gráficas de dispersión y las pruebas Chi-Cuadrado, K-S y Poker.', side: 'left', align: 'start' }
         },
         {
           element: '.tour-info',
@@ -123,6 +129,15 @@ function App() {
           </div>
           
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowCompareModal(true)}
+              className="tour-compare p-3 bg-indigo-600 hover:bg-indigo-700 border border-indigo-500 hover:border-indigo-400 rounded-xl transition-all text-white flex items-center justify-center gap-2 font-medium shadow-[0_0_15px_rgba(79,70,229,0.3)] shadow-indigo-500/20"
+              title="Comparar los 3 modelos"
+            >
+              <BarChart3 className="w-5 h-5" />
+              <span className="hidden lg:inline text-sm">Comparar Modelos</span>
+            </button>
+            
             {!results && !isGenerating && (
               <button
                 onClick={() => {
@@ -187,7 +202,7 @@ function App() {
                       <strong className="text-indigo-200">Cuadrados Medios:</strong><br/>
                       • <span className="text-indigo-100 font-medium">X₀ (semilla):</span> Exactamente <i>D</i> dígitos.<br/>
                       • ⚠️ Evita semillas con ceros al final para no colapsar rápidamente a 0.<br/>
-                      <span className="text-emerald-400 font-medium mt-1 inline-block">💡 Semillas Ideales (D=4):</span> 5772, 7182 o 9143
+                      <span className="text-emerald-400 font-medium mt-1 inline-block">💡 Semillas Ideales (D=3,4):</span> 123, 124 o 157
                     </p>
                   </div>
                 </motion.div>
@@ -340,6 +355,7 @@ function App() {
       </main>
 
       <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
+      <CompareModal isOpen={showCompareModal} onClose={() => setShowCompareModal(false)} params={params} />
     </div>
   );
 }
