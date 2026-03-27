@@ -4,6 +4,8 @@
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
+📖 **[Ver Manual de Usuario](https://docs.google.com/document/d/1iZHUzVeRkD2zG4jbmzTSvAfHUOksLigk/edit)** 
+
 Una aplicación web moderna e interactiva diseñada para la generación, visualización y evaluación estadística de números pseudoaleatorios. Este proyecto de simulación permite a los usuarios experimentar con diferentes algoritmos de generación matemática y someter los resultados a rigurosas pruebas de uniformidad e independencia.
 
 ---
