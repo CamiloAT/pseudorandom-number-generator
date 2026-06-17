@@ -105,4 +105,4 @@ pseudorandom-number-generator/
 | **Camilo Andres Arias Tenjo** | [@CamiloAT](https://github.com/CamiloAT)     |
 | **Jose Luis Ortega Castillo** | [@JoseOrtegaUPTC](https://github.com/JoseOrtegaUPTC) |
 
-Browser Extension Development
+*Computer Simulation*
